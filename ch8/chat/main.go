@@ -49,25 +49,34 @@ func broadcast() {
 }
 
 func handleConn(conn net.Conn) {
-	ch := make(chan string)
-	go clientWriter(conn, ch)
-	who := conn.RemoteAddr().String()
+	defer conn.Close() //确保关闭连接
+
+	//创建客户端channel
+	ch := make(chan string, 1)
+	//要求对方输入姓名
+	_, _ = fmt.Fprintln(conn, "Please input your name:")
+	input := bufio.NewScanner(conn)
+	if !input.Scan() {
+		return
+	}
+	who := input.Text()
+
+	//向所有成员广播有新成员进入
 	ch <- "You are " + who
 	messages <- who + " has arrived"
 	entering <- ch
 
-	input := bufio.NewScanner(conn)
+	go clientWriter(conn, ch)
 	for input.Scan() {
 		messages <- who + ":" + input.Text()
 	}
 
 	leaving <- ch
 	messages <- who + " has left"
-	conn.Close()
 }
 
 func clientWriter(conn net.Conn, ch <-chan string) {
 	for msg := range ch {
-		fmt.Fprintln(conn, msg)
+		_, _ = fmt.Fprintln(conn, msg)
 	}
 }
