@@ -10,7 +10,7 @@ import (
 func main() {
 	listener, err := net.Listen("tcp", "localhost:8000")
 	if err != nil {
-		log.Fatalf("%v", err)
+		log.Fatal(err)
 	}
 	go broadcast()
 	for {
@@ -41,9 +41,11 @@ func broadcast() {
 			}
 		case cli := <-entering:
 			clients[cli] = true
+			log.Printf("Get new connection: %v", cli)
 		case cli := <-leaving:
 			delete(clients, cli)
 			close(cli)
+			log.Printf("Delete a connection: %v", cli)
 		}
 	}
 }
