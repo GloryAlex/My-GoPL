@@ -51,7 +51,9 @@ func broadcast() {
 }
 
 func handleConn(conn net.Conn) {
-	defer conn.Close() //确保关闭连接
+	defer func(conn net.Conn) {
+		_ = conn.Close()
+	}(conn) //确保关闭连接
 
 	//创建客户端channel
 	ch := make(chan string, 1)
