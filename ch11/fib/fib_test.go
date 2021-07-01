@@ -34,18 +34,18 @@ func TestFibonacci(t *testing.T) {
 func BenchmarkFibonacciV2(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		FibonacciV2(rand.Int()%20000)
+		FibonacciV2(rand.Int() % 20000)
 	}
 }
 func BenchmarkFibonacciV1(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		FibonacciV1(rand.Int()%20000)
+		FibonacciV1(rand.Int() % 20000)
 	}
 }
 func BenchmarkFibonacci(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		Fibonacci(rand.Int()%50)
+		Fibonacci(rand.Int() % 50)
 	}
 }
